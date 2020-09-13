@@ -4,7 +4,7 @@
  * @return array: массив лидов
  */
 function get_leads_fromsql() {
-    require_once 'connection.php'; // подключаем скрипт
+    require 'connection.php'; // подключаем скрипт
     # подключение к  базе amo
     $link = mysqli_connect($host, $user, $password, $database_amo)
     or die("Ошибка " . mysqli_error($link));
