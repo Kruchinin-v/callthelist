@@ -14,6 +14,12 @@ include 'functions/asteriskModule.php';
 
 require('../tokens/access_token.php');
 
+$correct_amount = [
+    [0, 3, 6, "Звонок в 10:00"],
+    [1, 4, 7, "Звонок в 13:00"],
+    [2, 5, 8, "Звонок в 16:00"]
+];
+
 /**
  * Функция проверки времени запуска срипта
  * @return int: возвращает режим, основанный на времени запуска
@@ -81,76 +87,104 @@ function get_leads_fromsql() {
     return $data;
 }
 
+/**
+ * Функия для поиска в бд asterisk внутренний номер менеджера
+ * @param $id_user: id amocrm пользователя
+ * @return mixed: внутренний номер менеджера
+ */
+function get_manager_phone($id_user) {
+    /**
+     * Подключение к базе данных
+     */
+    require 'functions/connection.php'; // подключаем скрипт
 
+    # подключение к  базе
+    $link = mysqli_connect($host, $user, $password, $database_freepbx)
+    or die("Ошибка " . mysqli_error($link) . "\n");
+
+    $query = "select id from sip where data=" . $id_user;
+
+    $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
+
+    if(!$result) {
+        echo "<p>Выполнение запроса прошло не успешно</p>\n\n";
+    }
+
+    # получили внутренний номер пользователя
+    return mysqli_fetch_array($result)[0];
+}
+
+/**
+ * Функция увеличивает значение количества звонокв для лида
+ * @param $id_lead: id лида.
+ */
+function increment_count_call($id_lead){
+    require 'functions/connection.php'; // подключаем скрипт
+    # подключение к  базе amo
+    $link = mysqli_connect($host, $user, $password, $database_amo)
+    or die("Ошибка " . mysqli_error($link));
+
+    $query = "update leads set count_call = count_call + 1 where id_lead = $id_lead;";
+
+    $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
+
+    if(!$result) {
+        echo "<p>Выполнение запроса прошло не успешно</p>\n\n";
+    }
+}
+
+/**
+ * Перебирает лиды из списка и запускает звонки. Прибавляет количество звонков
+ * @param $leads: Список лидов из бд
+ * @param $correct_amount: корректные количества звонков
+ * @param $mode: режим определение вермени звонка
+ * @param $access_token: ключ для зпросов
+ */
+function autoobzvon($leads, $correct_amount, $mode, $access_token) {
+    $busy_managers = [];
+
+    foreach ($leads as $lead) {
+        if (!in_array($lead['count_call'], $correct_amount[$mode - 1])) {
+            continue;
+        }
+        $id_lead = $lead['id_lead'];
+        # получение id контакта и ответственного, для получения их номеров телефонов
+        list ($id_contact, $id_user) = getContact($id_lead, $access_token);
+        # получение номеров телефонов контакта
+        $phones = getPhones($id_contact, $access_token);
+        # получение номера менеджера из базы данных asterisk
+        $phone_user = get_manager_phone($id_user);
+
+        # для тестов
+        $phone_user = '101';
+        if ($id_lead == '28933281') {
+            $phones = ['102', 1];
+            $phone_user = '101';
+        }
+
+        if (in_array($phone_user, $busy_managers)) {
+            print("Менеджер $phone_user уже занят\n");
+            continue;
+        }
+
+        print("Звоним $phones[0] для менедера $phone_user" . "\n");
+        # запуск функции из asteriskModule.php
+        $a = calling($phone_user,$phones[0], 1);
+        # добавить менеджера в список занятых, чтобы ему не было направленно 2 звонка
+        $busy_managers[] = $phone_user;
+        # прибавить количество сделаных вызовов
+        increment_count_call($id_lead);
+    }
+}
 
 $mode = get_determination_of_mode();
 $leads = get_leads_fromsql();
 
+# вывести время звонка
+print($correct_amount[$mode - 1][3] . "\n");
 
-print("\n");
-exit(1);
-
-# получение id контакта и ответственного, для получения их номеров телефонов
-list ($id_contact, $id_user) = getContact($id_lead, $access_token);
-
-$id_lead = '29005789';
+autoobzvon($leads, $correct_amount, $mode, $access_token);
 
 
-
-
-
-# получение номеров телефонов контакта
-$phones = getPhones($id_contact, $access_token);
-
-
-
-/**
- * Подключение к базе данных
- */
-
-
-# подключение к  базе
-$link = mysqli_connect($host, $user, $password, $database_freepbx)
-    or die("Ошибка " . mysqli_error($link));
-
-$query = "select id from sip where data=" . $id_user;
-
-$result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
-
-if(!$result) {
-    echo "<p>Выполнение запроса прошло не успешно</p>\n\n";
-}
-
-# получили внутренний номер пользователя
-$phone_user =mysqli_fetch_array($result)[0];
-
-
-
-
-
-$now_date = date("Y-m-d");
-//$phone_user = '101';
-
-
-
-$query = "INSERT INTO `phones` (`date`, `phone_number`, `phone_mp`, `count_call`) 
-VALUES (
-'$now_date',
-'$phones[0]',
-'$phone_user',
-0
-)";
-
-
-$result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
-
-if(!$result) {
-    echo "<p>Выполнение запроса прошло не успешно</p>\n\n";
-}
-
-# получили внутренний номер пользователя
-//$phone_user =mysqli_fetch_array($result)[0];
-// запуск функции из asteriskModule.php
-//$a = calling($phone_user,$phones[0]);
 
 
