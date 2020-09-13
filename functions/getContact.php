@@ -1,4 +1,3 @@
-
 <?php
 
 function getContact($id_lead, $access_token) {

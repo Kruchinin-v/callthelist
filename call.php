@@ -14,30 +14,72 @@ include 'functions/asteriskModule.php';
 
 require('../tokens/access_token.php');
 
-require_once 'functions/connection.php'; // подключаем скрипт
+function get_determination_of_mode() {
+    date_default_timezone_set(ini_get('date.timezone'));
 
-# подключение к  базе amo
-$link = mysqli_connect($host, $user, $password, $database_amo)
-or die("Ошибка " . mysqli_error($link));
+    $dayofweek = date("l");
+    $weekends = ['Saturday', 'Sunday'];
 
-$query = "SELECT date, id_lead, count_call from leads";
+    # на время теста
+    $dayofweek = "asd";
 
-$result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
+    if (in_array($dayofweek, $weekends)) {
+        print("Сегодня выходной\n");
+        exit(1);
+    }
 
-if(!$result) {
-    echo "<p>Выполнение запроса прошло не успешно</p>\n\n";
+    $now_time = date("H:i");
+
+    # на время теста
+    $now_time = "10:00";
+
+    switch ($now_time) {
+        case "10:00":
+            $mode = 1;
+            break;
+        case "13:00":
+            $mode = 2;
+            break;
+        case "16:00":
+            $mode = 3;
+            break;
+        default:
+            $mode = 0;
+            print("Не верное время запуска $now_time\n");
+            exit(1);
+    }
+    return $mode;
 }
 
-while ($row = $result->fetch_assoc()) {
-//    echo " date = " . $row['date'] . "\n";
-//    echo " id_lead = " . $row['id_lead'] . "\n";
-    print(var_export($row, true));
+function get_leads_fromsql() {
+    require_once 'functions/connection.php'; // подключаем скрипт
+    # подключение к  базе amo
+    $link = mysqli_connect($host, $user, $password, $database_amo)
+    or die("Ошибка " . mysqli_error($link));
+
+    $query = "SELECT date, id_lead, count_call from leads";
+
+    $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
+
+    if(!$result) {
+        echo "<p>Выполнение запроса прошло не успешно</p>\n\n";
+    }
+
+    $data = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    return $data;
 }
 
-//print(var_export($result,true) );
+
+
+$mode = get_determination_of_mode();
+$leads = get_leads_fromsql();
+
+
 print("\n");
-
-
 exit(1);
 
 # получение id контакта и ответственного, для получения их номеров телефонов

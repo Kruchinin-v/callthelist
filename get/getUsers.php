@@ -1,7 +1,7 @@
 
 <?php
 
-function getUser($hash = 'a6952b1cb4dae7dcbaf37cf2b49903c999488691') {
+function getUser() {
 
     require('../../tokens/access_token.php');
 

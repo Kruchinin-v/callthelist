@@ -1,4 +1,3 @@
-
 <?php
 function getPhones($id_contact, $access_token) {
     /* Для начала нам необходимо инициализировать данные, необходимые для составления запроса. */
@@ -90,4 +89,3 @@ $a = var_export($b,true);
 echo $a;
 
 file_put_contents($file, $a);*/
-
