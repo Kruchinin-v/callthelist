@@ -14,6 +14,10 @@ include 'functions/asteriskModule.php';
 
 require('../tokens/access_token.php');
 
+/**
+ * Функция проверки времени запуска срипта
+ * @return int: возвращает режим, основанный на времени запуска
+ */
 function get_determination_of_mode() {
     date_default_timezone_set(ini_get('date.timezone'));
 
@@ -51,6 +55,10 @@ function get_determination_of_mode() {
     return $mode;
 }
 
+/**
+ * Функция берет из базы лиды, по котором нужны звонки
+ * @return array: массив лидов
+ */
 function get_leads_fromsql() {
     require_once 'functions/connection.php'; // подключаем скрипт
     # подключение к  базе amo
