@@ -177,8 +177,8 @@ function calling($fromPhone, $toPhone, $stat = 0) {
     // problems? exiting
     if ($resp[0]['response']!=='Success') answer(array('status'=>'error','data'=>$resp[0]));
 //~~~~~~~~~~~~~~~~
-    $file = '/tmp/ans.txt';
-    file_put_contents($file, var_export($stat,true));
+//    $file = '/tmp/ans.txt';
+//    file_put_contents($file, var_export($stat,true));
 //~~~~~~~~~~~~~~~~
     if ($stat != 0) {
         # звонок сначала клиенту
