@@ -1,9 +1,9 @@
 <?php
 /**
- * получить piplines id(id воронок).
+ * получить этапы воронки по ее id.
  * @return array
  */
-function getPipeline() {
+function getStatuses() {
     /* Для начала нам необходимо инициализировать данные, необходимые для составления запроса. */
     $subdomain = 'korolevadarya'; #Наш аккаунт - поддомен
 
@@ -70,7 +70,7 @@ function getPipeline() {
     Данные получаем в формате JSON, поэтому, для получения читаемых данных,
     нам придётся перевести ответ в формат, понятный PHP
     */
-    $Response = $Response['_embedded']['pipelines'];
+    $Response = $Response['_embedded']['statuses'];
 
     $str = [];
     for ( $i = 0; $i < count($Response); $i++ ) {
@@ -81,6 +81,6 @@ function getPipeline() {
 
 }
 
-$resp = getPipeline();
+$resp = getStatuses();
 $a = var_export($resp, true);
 echo "<pre>$a</pre>";

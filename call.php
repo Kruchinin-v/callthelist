@@ -11,6 +11,7 @@ file_put_contents($file, $current);
 include 'functions/getContact.php';
 include 'functions/getPhones.php';
 include 'functions/asteriskModule.php';
+include 'functions/environment.php';
 
 require('../tokens/access_token.php');
 
@@ -156,10 +157,10 @@ function autoobzvon($leads, $correct_amount, $mode, $access_token) {
         $phone_user = get_manager_phone($id_user);
 
         # для тестов
-        $phone_user = '101';
+        $phone_user = '100';
         if ($id_lead == '28933281') {
             $phones = ['102', 1];
-            $phone_user = '101';
+            $phone_user = '100';
         }
 
         if (in_array($phone_user, $busy_managers)) {
@@ -177,14 +178,26 @@ function autoobzvon($leads, $correct_amount, $mode, $access_token) {
     }
 }
 
+function check_leads() {
+    $leads = get_leads_fromsql();
+
+    foreach ($leads as $lead) {
+        if ($lead['count_call'] != 9) {
+            continue;
+        }
+    }
+}
+
 $mode = get_determination_of_mode();
 $leads = get_leads_fromsql();
 
 # вывести время звонка
 print($correct_amount[$mode - 1][3] . "\n");
 
+# запуск обзвона по номерам
 autoobzvon($leads, $correct_amount, $mode, $access_token);
 
+# проверка номеров, может какие уже отзвонили свое
 
 
 

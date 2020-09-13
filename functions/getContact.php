@@ -59,7 +59,7 @@ function getContact($id_lead, $access_token) {
     нам придётся перевести ответ в формат, понятный PHP
     */
     
-    $Response = $Response['_embedded']['items'];//[0]['main_contact']['_links']['self']['href'];
+    $Response = $Response['_embedded']['pipelines'];//[0]['main_contact']['_links']['self']['href'];
 
     # получить гет строку с id контакта
     $id_contact = $Response[0]['main_contact']['_links']['self']['href'];
