@@ -7,7 +7,7 @@ function getStatuses() {
     /* Для начала нам необходимо инициализировать данные, необходимые для составления запроса. */
     $subdomain = 'korolevadarya'; #Наш аккаунт - поддомен
 
-    require('../../tokens/access_token.php');
+    require('access_token.php');
 
     if (isset($_GET['id'])) {
         $id_pipeline = $_GET['id'];
