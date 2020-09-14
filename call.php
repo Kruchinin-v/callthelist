@@ -14,6 +14,7 @@ include 'functions/asteriskModule.php';
 include 'functions/environment.php';
 include 'functions/get_leads_fromsql.php';
 include 'functions/moveLead.php';
+include 'functions/getLead.php';
 
 require('../tokens/access_token.php');
 
@@ -194,7 +195,25 @@ function check_leads($status_id_next, $access_token) {
     }
 }
 
+/**
+ * Актуализация списка лидов с этапом обзвона
+ * @param $status_id_main: id эатпа с обзвоном
+ */
+function check_relevance_list($status_id_main) {
+    $leads = get_leads_fromsql();
+
+    foreach ($leads as $lead) {
+        $status_id = getLead($lead['id_lead'])['status_id'];
+        if ($status_id != $status_id_main) {
+            print("Лид " . $lead['id_lead'] . " больше не в этапе с обзвоном. Удалить\n");
+            delete_lead($lead['id_lead']);
+        }
+    }
+}
+
 $mode = get_determination_of_mode();
+check_relevance_list($status_id_main);
+
 $leads = get_leads_fromsql();
 
 # вывести время звонка
