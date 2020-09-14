@@ -1,35 +1,35 @@
 <?php
-
-
-function moveLead($id_lead, $id_new_status, $access_token)
+function moveLead($id_lead, $id_new_status)
 {
-
+//    $access_token = '';
+    require('/var/www/html/amocrm/tokens/access_token.php');
     /* Для начала нам необходимо инициализировать данные, необходимые для составления запроса. */
     $subdomain = 'korolevadarya'; #Наш аккаунт - поддомен
 
     /* Формируем ссылку для запроса */
-    $link = 'https://' . $subdomain . '.amocrm.ru/api/v2/leads/' . $id_lead;
+    $link = 'https://' . $subdomain . '.amocrm.ru/api/v4/leads/' . $id_lead;
 
     $headers = [
-        'Authorization: Bearer ' . $access_token
+        'Authorization: Bearer ' . $access_token,
+        'Content-Type: application/json'
     ];
 
+
     $data = [
-        'status_id' => $id_new_status
+        'status_id' => (int)$id_new_status
     ];
 
     $curl = curl_init();
     /* Устанавливаем необходимые опции для сеанса cURL */
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_USERAGENT, 'amoCRM-API-client/1.0');
+    curl_setopt($curl, CURLOPT_USERAGENT, 'autoamo');
     curl_setopt($curl, CURLOPT_URL, $link);
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($curl, CURLOPT_HTTPHEADER,['Content-Type:application/json']);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_setopt($curl,CURLOPT_CUSTOMREQUEST, 'PATCH');
     curl_setopt($curl,CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($curl, CURLOPT_COOKIEFILE, dirname(__FILE__) . '/cookie.txt'); #PHP>5.3.6 dirname(__FILE__) -> __DIR__
-    curl_setopt($curl, CURLOPT_COOKIEJAR, dirname(__FILE__) . '/cookie.txt'); #PHP>5.3.6 dirname(__FILE__) -> __DIR__
+    curl_setopt($curl, CURLOPT_COOKIEFILE, dirname(__DIR__) . '/cookie.txt');
+    curl_setopt($curl, CURLOPT_COOKIEJAR, dirname(__DIR__) . '/cookie.txt');
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
     /* Вы также можете передать дополнительный HTTP-заголовок IF-MODIFIED-SINCE, в котором указывается дата в формате D, d M Y
@@ -57,10 +57,11 @@ function moveLead($id_lead, $id_new_status, $access_token)
     try {
         /* Если код ответа не равен 200 или 204 - возвращаем сообщение об ошибке */
         if ($code != 200 && $code != 204) {
+            print(var_export($Response,true));
             throw new Exception(isset($errors[$code]) ? $errors[$code] : 'Undescribed error', $code);
         }
     } catch (Exception $E) {
-        die('Ошибка: ' . $E->getMessage() . PHP_EOL . 'Код ошибки: ' . $E->getCode());
+        die('Ошибка: ' . $E->getMessage() . PHP_EOL . 'Код ошибки: ' . $E->getCode()  . "\n");
     }
     /*
     Данные получаем в формате JSON, поэтому, для получения читаемых данных,
@@ -71,14 +72,5 @@ function moveLead($id_lead, $id_new_status, $access_token)
     return $code;
 }
 
-/*require("../tokens/access_token.php");
-list($b, $c) = getContact(29005789, $access_token);
-
-
-
-
-//list($b, $c) = getContact(27363497);
-$a = var_export($b,true);
-$n = var_export($c,true);
-echo $a . " id контакта\n";
-echo $n . "id ответ \n";*/
+# для ручного запуска
+//moveLead(29005789,34818343 );
