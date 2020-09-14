@@ -134,8 +134,8 @@ function autoobzvon($leads, $correct_amount, $mode, $access_token) {
 
         # для тестов
         $phone_user = '100';
-        if ($id_lead == '28933281') {
-            $phones = ['102', 1];
+        if ($id_lead == '29101135') {
+            $phones = ['123', 1];
             $phone_user = '100';
         }
 
@@ -159,7 +159,7 @@ function autoobzvon($leads, $correct_amount, $mode, $access_token) {
  * @param $id_lead: id лида, которого нужно удалить из базы
  */
 function delete_lead($id_lead) {
-    require_once 'functions/connection.php'; // подключаем скрипт
+    require 'functions/connection.php'; // подключаем скрипт
     # подключение к  базе amo
     $link = mysqli_connect($host, $user, $password, $database_amo)
     or die("Ошибка " . mysqli_error($link));
@@ -179,6 +179,7 @@ function delete_lead($id_lead) {
  * @param $access_token: токен для работы с api
  */
 function check_leads($status_id_next, $access_token) {
+    print("Запускаем проверку после запуска звонка\n");
     $leads = get_leads_fromsql();
 
     foreach ($leads as $lead) {
@@ -186,6 +187,7 @@ function check_leads($status_id_next, $access_token) {
             continue;
         }
         else {
+            print($lead['id_lead'] . " - пора переносить на $status_id_next\n");
             moveLead($lead['id_lead'], $status_id_next);
             delete_lead($lead['id_lead']);
         }
