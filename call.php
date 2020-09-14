@@ -13,6 +13,7 @@ include 'functions/getPhones.php';
 include 'functions/asteriskModule.php';
 include 'functions/environment.php';
 include 'functions/get_leads_fromsql.php';
+include 'functions/moveLead.php';
 
 require('../tokens/access_token.php');
 
@@ -43,7 +44,7 @@ function get_determination_of_mode() {
     $now_time = date("H:i");
 
     # на время теста
-    $now_time = "10:00";
+    $now_time = "16:00";
 
     switch ($now_time) {
         case "10:00":
@@ -138,10 +139,10 @@ function autoobzvon($leads, $correct_amount, $mode, $access_token) {
             $phone_user = '100';
         }
 
-        if (in_array($phone_user, $busy_managers)) {
+/*        if (in_array($phone_user, $busy_managers)) {
             print("Менеджер $phone_user уже занят\n");
             continue;
-        }
+        }*/
 
         print("Звоним $phones[0] для менедера $phone_user" . "\n");
         # запуск функции из asteriskModule.php
@@ -153,12 +154,40 @@ function autoobzvon($leads, $correct_amount, $mode, $access_token) {
     }
 }
 
-function check_leads() {
+/**
+ * Удаляет лид из списка обзвона
+ * @param $id_lead: id лида, которого нужно удалить из базы
+ */
+function delete_lead($id_lead) {
+    require_once 'functions/connection.php'; // подключаем скрипт
+    # подключение к  базе amo
+    $link = mysqli_connect($host, $user, $password, $database_amo)
+    or die("Ошибка " . mysqli_error($link));
+
+    $query = "delete from leads where id_lead = $id_lead";
+
+    $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
+
+    if(!$result) {
+        echo "<p>Выполнение запроса прошло не успешно</p>\n\n";
+    }
+}
+
+/**
+ * Ищет лиды, который полностью прозвонены
+ * @param $status_id_next: этап, на который нужно перекинуть лида
+ * @param $access_token: токен для работы с api
+ */
+function check_leads($status_id_next, $access_token) {
     $leads = get_leads_fromsql();
 
     foreach ($leads as $lead) {
         if ($lead['count_call'] != 9) {
             continue;
+        }
+        else {
+            moveLead($lead['id_lead'], $status_id_next);
+            delete_lead($lead['id_lead']);
         }
     }
 }
@@ -172,7 +201,9 @@ print($correct_amount[$mode - 1][3] . "\n");
 # запуск обзвона по номерам
 autoobzvon($leads, $correct_amount, $mode, $access_token);
 
-# проверка номеров, может какие уже отзвонили свое
-
+if ($mode == 3) {
+    # проверка номеров, может какие уже отзвонили свое
+    check_leads($status_id_next, $access_token);
+}
 
 
