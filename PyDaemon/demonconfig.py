@@ -58,7 +58,7 @@ class StatCon:
         while (True):
             self.time_alignment()
             now_time = strftime("%H:%M", time.localtime())
-            if now_time in ["16:54"]:
+            if now_time in now_time:
                 print(f"Запуск php скрипта в {now_time}")
                 my_thread = MyThread("/usr/bin/php",
                                      "/var/www/html/amocrm/autoamo/call.php")
