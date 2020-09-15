@@ -23,6 +23,8 @@ class MyThread(Thread):
         answer = subprocess.run(command, shell=True, stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE, encoding='UTF-8')
         print(answer.stdout)
+        if answer.stderr:
+            print("Error:" + answer.stderr)
 
 def main():
     """
