@@ -1,0 +1,17 @@
+[Unit]
+Description=Daemon for working autoamo
+After=asterisk.target
+After=network.target
+
+[Service]
+Type=forking
+#PIDFile=/run/asterisk/autoamo.pid
+PIDFile=/var/log/python-daemon/daemon-naprimer.pid
+
+Environment=daemon_path=/var/www/html/amocrm/autoamo/PyDaemon/pydaemon.py
+ExecStart=/usr/bin/python3 ${daemon_path}  start
+ExecStop=/usr/bin/python3 ${daemon_path}  stop
+ExecReload=/usr/bin/python3 ${daemon_path}  restart
+
+[Install]
+WantedBy=multi-user.target
