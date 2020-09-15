@@ -51,12 +51,15 @@ class StatCon:
             time.sleep(1)
 
     def run(self):
+        now_time = strftime("%H:%M", time.localtime())
+        print(f"\nЗапуск pydaemon в {now_time}")
         # время, когда нужно будет запускать скрипт
         time_run = ["10:00", "13:00", "16:00"]
         while (True):
             self.time_alignment()
             now_time = strftime("%H:%M", time.localtime())
-            if now_time in ["16:00"]:
+            if now_time in ["16:54"]:
+                print(f"Запуск php скрипта в {now_time}")
                 my_thread = MyThread("/usr/bin/php",
                                      "/var/www/html/amocrm/autoamo/call.php")
                 my_thread.start()
