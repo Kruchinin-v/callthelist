@@ -8,8 +8,7 @@ $current .= "\n". $dateN . "\n" . var_export($_POST,true) . "\n";
 file_put_contents($file, $current);
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-//exit(1);
-require('../tokens/access_token.php');
+require('/var/www/html/amocrm/tokens/access_token.php');
 
 /**
  * Проверяет, указан ли id leads верно
