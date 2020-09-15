@@ -16,7 +16,7 @@ include 'functions/get_leads_fromsql.php';
 include 'functions/moveLead.php';
 include 'functions/getLead.php';
 
-require('../tokens/access_token.php');
+require('/var/www/html/amocrm/tokens/access_token.php');
 
 $correct_amount = [
     [0, 3, 6, "Звонок в 10:00"],
@@ -189,7 +189,7 @@ function check_leads($status_id_next, $access_token) {
         }
         else {
             print($lead['id_lead'] . " - пора переносить на $status_id_next\n");
-            moveLead($lead['id_lead'], $status_id_next);
+            moveLead($lead['id_lead'], $status_id_next, $access_token);
             delete_lead($lead['id_lead']);
         }
     }
@@ -197,13 +197,14 @@ function check_leads($status_id_next, $access_token) {
 
 /**
  * Актуализация списка лидов с этапом обзвона
- * @param $status_id_main: id эатпа с обзвоном
+ * @param $status_id_main : id эатпа с обзвоном
+ * @param $access_token
  */
-function check_relevance_list($status_id_main) {
+function check_relevance_list($status_id_main, $access_token) {
     $leads = get_leads_fromsql();
 
     foreach ($leads as $lead) {
-        $status_id = getLead($lead['id_lead'])['status_id'];
+        $status_id = getLead($lead['id_lead'], $access_token)['status_id'];
         if ($status_id != $status_id_main) {
             print("Лид " . $lead['id_lead'] . " больше не в этапе с обзвоном. Удалить\n");
             delete_lead($lead['id_lead']);
@@ -212,7 +213,7 @@ function check_relevance_list($status_id_main) {
 }
 
 $mode = get_determination_of_mode();
-check_relevance_list($status_id_main);
+check_relevance_list($status_id_main, $access_token);
 
 $leads = get_leads_fromsql();
 

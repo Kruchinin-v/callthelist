@@ -1,8 +1,6 @@
 <?php
-function moveLead($id_lead, $id_new_status)
+function moveLead($id_lead, $id_new_status, $access_token)
 {
-//    $access_token = '';
-    require('/var/www/html/amocrm/tokens/access_token.php');
     /* Для начала нам необходимо инициализировать данные, необходимые для составления запроса. */
     $subdomain = 'korolevadarya'; #Наш аккаунт - поддомен
 

@@ -1,8 +1,6 @@
 <?php
 
-function getLead($id_lead) {
-    $access_token = '';
-    require("access_token.php");
+function getLead($id_lead, $access_token) {
     /* Для начала нам необходимо инициализировать данные, необходимые для составления запроса. */
     $subdomain = 'korolevadarya'; #Наш аккаунт - поддомен
 
