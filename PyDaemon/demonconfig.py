@@ -9,7 +9,8 @@ class SigFunctionsCon:
         self.__ourdaemon = ourdaemon
 
     def SIGTERM(self):
-        sys.stderr.write("BB!\n")
+        now_time = strftime("%H:%M", time.localtime())
+        sys.stdout.write(f"Остановлен в {now_time}\n")
         sys.exit(0)
 
 
