@@ -2,7 +2,7 @@
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $dateN = date(DATE_RFC822);
-$file = '/var/www/html/amocrm/autoamo/answ.json';
+$file = '/var/www/html/amocrm/autoamo/answ_call.json';
 $current = file_get_contents($file);
 $current .= "\n". $dateN . "\n" . var_export($_POST,true) . "\n";
 file_put_contents($file, $current);
@@ -35,7 +35,7 @@ function get_determination_of_mode() {
     $weekends = ['Saturday', 'Sunday'];
 
     # на время теста
-    $dayofweek = "asd";
+//    $dayofweek = "asd";
 
     if (in_array($dayofweek, $weekends)) {
         print("Сегодня выходной\n");
@@ -45,7 +45,7 @@ function get_determination_of_mode() {
     $now_time = date("H:i");
 
     # на время теста
-    $now_time = "16:00";
+//    $now_time = "16:00";
 
     switch ($now_time) {
         case "10:00":
@@ -134,11 +134,11 @@ function autoobzvon($leads, $correct_amount, $mode, $access_token) {
         $phone_user = get_manager_phone($id_user);
 
         # для тестов
-        $phone_user = '100';
-        if ($id_lead == '29101135') {
-            $phones = ['123', 1];
-            $phone_user = '100';
-        }
+//        $phone_user = '100';
+//        if ($id_lead == '29101135') {
+//            $phones = ['123', 1];
+//            $phone_user = '100';
+//        }
 
 /*        if (in_array($phone_user, $busy_managers)) {
             print("Менеджер $phone_user уже занят\n");

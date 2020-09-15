@@ -2,7 +2,7 @@
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $dateN = date(DATE_RFC822);
-$file = '/var/www/html/amocrm/autoamo/answ.json';
+$file = '/var/www/html/amocrm/autoamo/answ_newleads.json';
 $current = file_get_contents($file);
 $current .= "\n". $dateN . "\n" . var_export($_POST,true) . "\n";
 file_put_contents($file, $current);
@@ -73,8 +73,6 @@ VALUES (
         echo "<p>Выполнение запроса прошло не успешно</p>\n\n";
     }
 }
-
-//$id_lead = '28933281';
 
 $id_lead = check_params();
 
