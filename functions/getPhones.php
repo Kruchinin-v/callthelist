@@ -3,7 +3,7 @@ function getPhones($id_contact, $access_token) {
     /* Для начала нам необходимо инициализировать данные, необходимые для составления запроса. */
     $subdomain = 'korolevadarya'; #Наш аккаунт - поддомен
 
-    $link = 'https://' . $subdomain . '.amocrm.ru/api/v2/contacts/?id=' . $id_contact;
+    $link = 'https://' . $subdomain . '.amocrm.ru/api/v4/contacts/' . $id_contact;
 
     $headers = [
         'Authorization: Bearer ' . $access_token

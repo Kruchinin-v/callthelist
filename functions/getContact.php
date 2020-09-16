@@ -6,7 +6,7 @@ function getContact($id_lead, $access_token) {
     $subdomain = 'korolevadarya'; #Наш аккаунт - поддомен
 
     /* Формируем ссылку для запроса */
-    $link = 'https://' . $subdomain . '.amocrm.ru/api/v2/leads?id=' . $id_lead;
+    $link = 'https://' . $subdomain . '.amocrm.ru/api/v4/leads/' . $id_lead;
   
     $headers = [
         'Authorization: Bearer ' . $access_token
