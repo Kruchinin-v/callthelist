@@ -62,7 +62,8 @@ class StatCon:
             if now_time in time_run:
                 print(f"Запуск php скрипта в {now_time}")
                 my_thread = MyThread("/usr/bin/php",
-                                     "/var/www/html/amocrm/autoamo/call.php")
+                                     "/var/www/html/amocrm"
+                                     "/callthelist/call.php")
                 my_thread.start()
             time.sleep(55)
 
