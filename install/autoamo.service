@@ -11,7 +11,7 @@ PIDFile=/var/log/python-daemon/daemon-naprimer.pid
 StandardOutput=tty
 StandardError=tty
 
-Environment=daemon_path=/var/www/html/amocrm/autoamo/PyDaemon/pydaemon.py
+Environment=daemon_path=/var/www/html/amocrm/callthelist/PyDaemon/pydaemon.py
 ExecStart=/usr/bin/python3 ${daemon_path}  start
 ExecStop=/usr/bin/python3 ${daemon_path}  stop
 ExecReload=/usr/bin/python3 ${daemon_path}  restart
