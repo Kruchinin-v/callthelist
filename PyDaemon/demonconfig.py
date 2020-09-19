@@ -9,7 +9,7 @@ class SigFunctionsCon:
         self.__ourdaemon = ourdaemon
 
     def SIGTERM(self):
-        now_time = strftime("%H:%M", time.localtime())
+        now_time = strftime("%H:%M %d.%m", time.localtime())
         sys.stdout.write(f"Остановлен в {now_time}\n")
         sys.exit(0)
 
@@ -52,7 +52,7 @@ class StatCon:
             time.sleep(1)
 
     def run(self):
-        now_time = strftime("%H:%M", time.localtime())
+        now_time = strftime("%H:%M %d.%m", time.localtime())
         print(f"\nЗапуск pydaemon в {now_time}")
         # время, когда нужно будет запускать скрипт
         time_run = ["10:00", "13:00", "16:00"]
