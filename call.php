@@ -2,7 +2,7 @@
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $dateN = date(DATE_RFC822);
-$file = '/var/www/html/amocrm/autoamo/answ_call.json';
+$file = '/var/www/html/amocrm/callthelist/answ_call.json';
 $current = file_get_contents($file);
 $current .= "\n". $dateN . "\n" . var_export($_POST,true) . "\n";
 file_put_contents($file, $current);
