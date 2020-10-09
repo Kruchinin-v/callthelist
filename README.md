@@ -19,7 +19,7 @@ curl http://ats.karnavalnn.ru/amocrm/callthelist/functions/getPipelines.php
 curl http://ats.karnavalnn.ru/amocrm/callthelist/functions/getStatuses.php?id=3571748
 ```
 ---
-###### Заполнение переменных времени
+#### Заполнение переменных времени
 Заполнить переменную в файле `call.php`
 ```php
 # пример заполнения
@@ -45,7 +45,7 @@ my_thread = MyThread("/usr/bin/php",
 Так же проверить все переменные ниже. Пид файл, лог файл. Создать папку для логов.
  
 ---
-###### Создание базы данных
+#### Создание базы данных
 Для создании базы необходимо:
 - создать пустую базу
 - натравить на нее файл `install/callthelist.php`
@@ -53,7 +53,7 @@ my_thread = MyThread("/usr/bin/php",
 mysql -e "create database callthelist;"
 mysql callthelist < install/callthelist.php
 ```
-###### Настройка запуска через systemd
+#### Настройка запуска через systemd
 Есть готовый файл service, в нем нужно прописать путь до pid файла демона и путь до самого демона.
 ```
 cp install/callthelist.service /etc/systemd/system
