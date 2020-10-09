@@ -34,10 +34,7 @@ function asterisk_req($params,$quick=false){
  */
 function answer($array){
     global $ans;
-//        header('Content-type: text/javascript;');
-//        echo json_encode($array) . "\n";
     $ans[] = json_encode($array) . "\n";
-//        echo var_export($ans,true);
 }
 
 /*** Reads data from coinnection
@@ -78,28 +75,10 @@ function ami_req($params,$quick=false){
         else {$connection=NULL; return array(0=>array('response'=>'error','message'=>'socket_err:'.$en.'/'.$es));}
     }
 
-    # определение, что выполняется команда - originate
-    if ($params['Action'] == 'Originate') {
-        $action = 'call';
-//            echo "action: " . $action . "\n";
-
-
-    }
-
-    // building req.
-//        echo "\nstart\n";
-
     $str=array();
     foreach($params as $k=>$v) $str[]="{$k}: {$v}";
     $str[]='';
     $str=implode("\r\n",$str);
-
-    if ($action == 'call') {
-//            echo var_export($str,true);
-        # запись в файл. нужно для тестов
-        $file = '/var/www/html/amocrm/ans.json';
-        file_put_contents($file, var_export($params,true));
-    }
 
     // writing
     fwrite($connection,$str."\r\n");
@@ -110,13 +89,6 @@ function ami_req($params,$quick=false){
     // reading respomse and parsing it
     $str= ami_read($connection,$quick);
     $r=rawman_parse($str);
-
-    if ($action == 'call') {
-        file_put_contents($file, var_export($str,true));
-    }
-
-
-//        echo "\nend\n";
 
     return $r;
 }
@@ -173,18 +145,16 @@ function calling($fromPhone, $toPhone, $stat = 0) {
 
     // problems? exiting
     if ($resp[0]['response']!=='Success') answer(array('status'=>'error','data'=>$resp[0]));
-//~~~~~~~~~~~~~~~~
-//    $file = '/tmp/ans.txt';
-//    file_put_contents($file, var_export($stat,true));
-//~~~~~~~~~~~~~~~~
+
     if ($stat != 0) {
         # звонок сначала клиенту
         $params=array(
             'Action'=>'Originate',
             'ActionID'=>'myId',
-            'channel'=>'Local/'.intval($toPhone) . "@from-internal",
+            'channel'=>'Local/'.intval($toPhone) . "@amocrm-callthelist-client",
+//            'channel'=>'Local/'.intval($toPhone) . "@from-internal",
             'Exten'=>strval($fromPhone),
-            'Context'=>'amocrm-autoamo-mp',
+            'Context'=>'amocrm-callthelist-mp',
             'priority'=>'1',
             'Timeout'=>'160000',
             'Callerid'=>'amocrm <' . $toPhone . '>',
