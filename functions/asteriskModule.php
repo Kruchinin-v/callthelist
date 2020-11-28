@@ -146,42 +146,23 @@ function calling($fromPhone, $toPhone, $stat = 0) {
     // problems? exiting
     if ($resp[0]['response']!=='Success') answer(array('status'=>'error','data'=>$resp[0]));
 
-    if ($stat != 0) {
-        # звонок сначала клиенту
-        $params=array(
-            'Action'=>'Originate',
-            'ActionID'=>'myId',
-            'channel'=>'Local/'.intval($toPhone) . "@amocrm-callthelist-client",
+    # звонок сначала клиенту
+    $params=array(
+        'Action'=>'Originate',
+        'ActionID'=>'myId',
+        'channel'=>'Local/'.intval($toPhone) . "@amocrm-callthelist-client",
 //            'channel'=>'Local/'.intval($toPhone) . "@from-internal",
-            'Exten'=>strval($fromPhone),
-            'Context'=>'amocrm-callthelist-mp',
-            'priority'=>'1',
-            'Timeout'=>'160000',
-            'Callerid'=>'amocrm <' . $toPhone . '>',
-            'Async'=>'Yes',
-            // Not Implemented:
-            //'Callernumber'=>'150',
-            //'CallerIDName'=>'155',
-        );
-    }
-    else {
-        # звонок сначала МП
-        $params=array(
-            'Action'=>'Originate',
-            'ActionID'=>'myId',
-            'channel'=>'Local/'.intval($fromPhone) . "@amocrm",             # звонить сначала мп
-            'Exten'=>strval($toPhone),                                      # звонить сначала мп
-//            'Context'=>'from-internal',                                    # звонить сначала мп
-            'Context'=>'amocrm-out',                                    # звонить сначала мп
-            'priority'=>'1',
-            'Timeout'=>'190000',
-            'Callerid'=>$toPhone . ' <' . $toPhone . '>',
-            'Async'=>'Yes',
-            // Not Implemented:
-            //'Callernumber'=>'150',
-            //'CallerIDName'=>'155',
-        );
-    }
+        'Exten'=>strval($fromPhone),
+        'Context'=>'amocrm-callthelist-mp',
+        'priority'=>'1',
+        'Timeout'=>'160000',
+        'Callerid'=>'НБТ <' . $toPhone . '>',
+        'Async'=>'Yes',
+        // Not Implemented:
+        //'Callernumber'=>'150',
+        //'CallerIDName'=>'155',
+    );
+
 
 
 
