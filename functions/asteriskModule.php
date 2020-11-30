@@ -123,7 +123,7 @@ function rawman_parse($lines){
     return $messages;
 }
 
-function calling($fromPhone, $toPhone, $stat = 0) {
+function calling($fromPhone, $toPhone) {
 
     if (AC_PORT<1) die('Please, configure settings first!'); // die if not
 
@@ -162,10 +162,6 @@ function calling($fromPhone, $toPhone, $stat = 0) {
         //'Callernumber'=>'150',
         //'CallerIDName'=>'155',
     );
-
-
-
-
 
     $resp=asterisk_req($params,true);
 //    if ($resp[0]['response']!=='Success') answer(array('status'=>'error','data'=>$resp[0]));
