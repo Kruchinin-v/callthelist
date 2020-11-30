@@ -24,11 +24,13 @@ DROP TABLE IF EXISTS `leads`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `leads` (
   `id_phone` int(11) NOT NULL AUTO_INCREMENT,
-  `date` date NOT NULL,
-  `id_lead` text NOT NULL,
+  `date_create` date NOT NULL,
+  `date_last_call` date NOT NULL,
   `count_call` int(11) NOT NULL,
+  `count_day` int(11) DEFAULT '0',
+  `id_lead` text NOT NULL,
   PRIMARY KEY (`id_phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -40,4 +42,4 @@ CREATE TABLE `leads` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-16 22:30:18
+-- Dump completed on 2020-11-30 15:54:42

@@ -1,7 +1,11 @@
 import sys
+import os
+import subprocess
 import time
 from custom_thread import MyThread
 from time import strftime
+
+path_call = "/var/www/html/amocrm/callthelist/call.php"
 
 class SigFunctionsCon:
 
@@ -36,6 +40,26 @@ class ReactFunctionCon:
         self.__ourdaemon.start()
 
 
+def parse_time():
+    expression = r"egrep -o '^\s*\[\"time\" => \"[0-9]{1,2}:[0-9]{1,2}\"' " \
+                 + path_call + " | egrep -o '[0-9]{1,2}:[0-9]{1,2}'"
+
+    answer = subprocess.run(expression, shell=True,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.DEVNULL, encoding='UTF-8')
+
+    if answer.returncode != 0:
+        return 3
+
+    times = answer.stdout.split('\n')
+    times.pop()
+
+    if len(times) == 0:
+        return 3
+
+    return times
+
+
 class StatCon:
     commands = "{start|stop|status}"
     strHelp = f"usage: {sys.argv[0]} {commands}"
@@ -55,17 +79,20 @@ class StatCon:
         now_time = strftime("%H:%M %d.%m", time.localtime())
         print(f"\nЗапуск pydaemon в {now_time}")
         # время, когда нужно будет запускать скрипт
-        time_run = ["10:00", "13:00", "16:00"]
-        while (True):
+        time_run = parse_time()
+        if time_run == 3:
+            print("Не удалось получить время из скрипта php, взято дефолтное")
+            time_run = ["11:00", "15:00"]
+        print(f"время запуска: {time_run}")
+        while True:
             self.time_alignment()
             now_time = strftime("%H:%M", time.localtime())
-            if now_time in time_run:
+            if (now_time in time_run) and True:
                 print(f"Запуск php скрипта в {now_time}")
-                my_thread = MyThread("/usr/bin/php",
-                                     "/var/www/html/amocrm"
-                                     "/callthelist/call.php")
+                my_thread = MyThread("/usr/bin/php", path_call)
                 my_thread.start()
-            time.sleep(55)
+            time.sleep(53)
+            now_time = strftime("%H:%M", time.localtime())
 
     pidFile = "/var/log/python-daemon/daemon-naprimer.pid"
 
@@ -74,4 +101,11 @@ class StatCon:
     outputter = "/var/log/python-daemon/out-daemon.log"
 
     errorer = "/var/log/python-daemon/err-daemon.log"
+
+
+if __name__ == "__main__":
+    parse_time()
+
+
+
 

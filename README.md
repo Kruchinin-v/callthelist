@@ -23,24 +23,16 @@ curl http://ats.karnavalnn.ru/amocrm/callthelist/functions/getStatuses.php?id=35
 Заполнить переменную в файле `call.php`
 ```php
 # пример заполнения
-$correct_amount = [
-    [0, 3, 6, "Звонок в 10:00"],
-    [1, 4, 7, "Звонок в 13:00"],
-    [2, 5, 8, "Звонок в 16:00"]
+$times = [
+    ["time" => "11:00", "mode" => 1],
+    ["time" => "15:00", "mode" => 2],
 ];
 ```
-К сожалению скрипт не сильно эластичен, по этому можно делать только 3 обзвона в день. В этой переменной нужно лишь 
-поправить время звонок, это время пишется в лог. Так же время необходимо править в переменной 
-`get_determination_of_mode`. Тут происходит проверка времени.  
-
 ---
 В файле deminconfig.php находятся настройки запуска скрипта по времени, в данном случае `call.php`. 
-В переменной `time_run` хранится массив времени, когда запускать скрипт.   
 Вот тут указано какой стрипт запускать. Чем(php) и путь скрипта. Скрипт запускается в потоке.
 ```
-my_thread = MyThread("/usr/bin/php",
-                                     "/var/www/html/amocrm"
-                                     "/callthelist/call.php")
+my_thread = MyThread("/usr/bin/php", path_call)
 ```
 Так же проверить все переменные ниже. Пид файл, лог файл. Создать папку для логов.
  
@@ -48,10 +40,10 @@ my_thread = MyThread("/usr/bin/php",
 #### Создание базы данных
 Для создании базы необходимо:
 - создать пустую базу
-- натравить на нее файл `install/callthelist.php`
+- натравить на нее файл `install/callthelist.sql`
 ```
 mysql -e "create database callthelist;"
-mysql callthelist < install/callthelist.php
+mysql callthelist < install/callthelist.sql
 ```
 #### Настройка запуска через systemd
 Есть готовый файл service, в нем нужно прописать путь до pid файла демона и путь до самого демона.

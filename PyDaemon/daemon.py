@@ -25,9 +25,7 @@ class SignalHandler:
         return "<Class:%s>" %(self.__class__.__name__)        
 
 class SigAction(SignalHandler):
-    
-    
-    def __init__(self, signum, callback):                                                                  
+    def __init__(self, signum, callback):
         self.signum = signum                                                  
         self.callback = callback                                              
         signal.signal(self.signum, self.handler)                              
@@ -39,9 +37,8 @@ class SigAction(SignalHandler):
         return "<Class:%s signal:%s>" %(self.__class__.__name__, self.signum)
 
 class Daemon:
-    
-    
-    def __init__(self, pidfile, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
+    def __init__(self, pidfile, stdin='/dev/null',
+                 stdout='/dev/null', stderr='/dev/null'):
         self.stdin = stdin
         self.stdout = stdout
         self.stderr = stderr
