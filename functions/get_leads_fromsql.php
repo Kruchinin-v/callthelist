@@ -9,7 +9,7 @@ function get_leads_fromsql() {
     $link = mysqli_connect($host, $user, $password, $database_amo)
     or die("Ошибка " . mysqli_error($link));
 
-    $query = "SELECT date, id_lead, count_call from leads";
+    $query = "SELECT date_create, id_lead, count_call from leads";
 
     $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
 
