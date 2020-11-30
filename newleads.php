@@ -59,7 +59,7 @@ function add_lead($id_lead) {
 
     $now_date = date("Y-m-d");
 
-    $query = "INSERT INTO `leads` (`date`, `id_lead`, `count_call`) 
+    $query = "INSERT INTO `leads` (`date_create`, `id_lead`, `count_call`) 
 VALUES (
 '$now_date',
 '$id_lead',
@@ -67,7 +67,7 @@ VALUES (
 )";
 
 
-    $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link));
+    $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link) . "\n");
 
     if(!$result) {
         echo "<p>Выполнение запроса прошло не успешно</p>\n\n";
